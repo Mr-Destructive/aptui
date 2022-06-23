@@ -18,7 +18,7 @@ from components import inputs, methods, response
 
 class MainApp(App):
     async def on_load(self) -> None:
-        await self.bind("q", "quit", "Quit")
+        await self.bind("ctrl+c", "quit", "Quit")
 
     async def on_mount(self) -> None:
         header = Header(tall=False, style="white on dark_orange")
@@ -26,16 +26,9 @@ class MainApp(App):
         await self.view.dock(
             header,
             inputs.InputURL("URL"),
-            response.ResponseField(
-                "Response Body",
-            ),
-            Placeholder(name="APTUI"),
             footer,
             edge="top",
         )
-        # await self.view.dock(
-        #    edge="left",
-        # )
 
 
 MainApp.run(title="APTUI")

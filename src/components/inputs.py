@@ -9,11 +9,13 @@ from textual.reactive import Reactive
 from rich.console import RenderableType
 from rich.align import Align
 from .response import ResponseField
+from .methods import MethodOptions
 
 
 class InputURL(Widget):
 
     url: Reactive[RenderableType] = Reactive("")
+    body: Reactive[RenderableType] = Reactive("")
     resp: Reactive[RenderableType] = Reactive("")
 
     def __init__(self, title: str):
@@ -22,13 +24,15 @@ class InputURL(Widget):
         self.title = title
         self.name = title
         self.resp = ""
+        self.body = ""
 
     def text(self) -> str:
         return self.url
 
     def on_key(self, event: events.Key) -> None:
         if event.key == "enter":
-            resp = requests.get(self.url)
+            resp = requests.get(self.url, json={"query": self.body})
+            print(resp.json())
             self.resp = resp.text
 
         elif event.key == "ctrl+h":
@@ -37,18 +41,26 @@ class InputURL(Widget):
             self.url = pyperclip.paste()
         elif event.key == "ctrl+x":
             self.url = ""
-        else:
+        elif event.key == "ctrl+u":
             self.url += event.key
+        elif event.key == "ctrl+p":
+            self.body = pyperclip.paste()
 
     def render(self) -> RenderableType:
-        input_url = Align.left(Text(self.url))
-        response_body = Align.right(Text(self.url))
-        grid = Table.grid(expand=True)
-        grid.add_row(f"URL: {self.url}")
-        grid.add_row("\nResponse : ")
-        grid.add_row(f"{self.resp}")
+
+        method_option = Table()
+        method_option.add_column("URL", no_wrap=True)
+        method_option.add_column("Payload", no_wrap=True)
+        method_option.add_column("Response", no_wrap=True)
+        methods = [
+            [f"URL: {self.url}\n", self.body, self.resp],
+        ]
+        for method in methods:
+            method_option.add_row(*method)
+            if method == methods[0]:
+                method_option.add_row(MethodOptions(""))
 
         return Panel(
-            grid,
+            method_option,
             title=self.title,
         )

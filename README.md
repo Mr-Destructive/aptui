@@ -23,6 +23,7 @@ It's quite a fresh project and is in it's initial stage of development.
 - Basic app structure
 - Layout of the TUI
 - GET request to an input URL
+- GraphQL API GET requests
 
 ## Tech Stack
 
@@ -34,8 +35,11 @@ It's quite a fresh project and is in it's initial stage of development.
 
 ## Development Log
 
-![APTUI Preview](https://res.cloudinary.com/techstructive-blog/image/upload/v1655914606/blog-media/aptui/aptui-preview-1.png)
+Preview - 1 
+![APTUI Preview 1](https://res.cloudinary.com/techstructive-blog/image/upload/v1655914606/blog-media/aptui/aptui-preview-1.png)
 
+Preview - 2
+![APTUI Preview 2](https://res.cloudinary.com/techstructive-blog/image/upload/v1656004771/blog-media/aptui/aptui-preview-2.png)
 ---
 
 ![APTUI Demo](https://res.cloudinary.com/techstructive-blog/image/upload/v1655914747/blog-media/aptui/aptui-demo-1.png)

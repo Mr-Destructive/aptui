@@ -4,6 +4,7 @@ from textual import events
 from rich.panel import Panel
 from textual.widget import Widget
 from rich.text import Text
+from rich.table import Table
 from textual.reactive import Reactive
 from rich.console import RenderableType
 from rich.align import Align
@@ -24,9 +25,11 @@ class ResponseField(Widget):
         return self.resp.text
 
     def render(self) -> RenderableType:
-        response_body = Align.left(Text(self.resp))
+        response_body = Align.right(Text(self.resp))
+        grid = Table(expand=True)
+        grid.add_column("Response ", justify="center")
 
         return Panel(
-            response_body,
+            grid,
             title=f"{self.title}",
         )
