@@ -19,7 +19,7 @@ class MethodOptions(Widget):
         print("clicked")
 
     def render(self) -> RenderableType:
-        grid = Table(width=75)
+        grid = Table(width=60)
         # grid.add_column(Button("Methods", style="white on black"))
         for method in self.methods:
             grid.add_column(
