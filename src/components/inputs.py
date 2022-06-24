@@ -78,6 +78,10 @@ class InputURL(Widget):
         if event.key == "ctrl+u":
             resp = requests.put(self.url, data=self.body, headers=self.headers)
             self.resp = resp.text
+        if event.key == "ctrl+d":
+            resp = requests.delete(self.url, data=self.body, headers=self.headers)
+            if resp.status_code == 204:
+                self.resp = "DELETED SUCCESSFULLY"
         elif event.key == "ctrl+h":
             self.url = self.url[:-1]
         elif event.key == "ctrl+v":
