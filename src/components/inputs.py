@@ -75,6 +75,9 @@ class InputURL(Widget):
         if event.key == "ctrl+o":
             resp = requests.post(self.url, data=self.body, headers=self.headers)
             self.resp = resp.text
+        if event.key == "ctrl+u":
+            resp = requests.put(self.url, data=self.body, headers=self.headers)
+            self.resp = resp.text
         elif event.key == "ctrl+h":
             self.url = self.url[:-1]
         elif event.key == "ctrl+v":
