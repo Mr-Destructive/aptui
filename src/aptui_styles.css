@@ -1,0 +1,31 @@
+#aptui {
+    height: 100fr;
+    max-height: 100%;
+}
+Request {
+    layout: vertical;
+    background: $boost;
+    height: 20;
+    margin: 1;
+    min-width: 50;
+    padding: 1;
+}
+
+#repsonse {
+    content-align: left bottom;
+    text-opacity: 100%;
+    dock: left;
+    padding: 5;
+}
+
+Button {
+    width: 15;
+}
+
+#send {
+    dock: right;
+}
+
+#import {
+    dock: bottom;
+}
