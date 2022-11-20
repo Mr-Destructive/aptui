@@ -6,9 +6,7 @@ Request {
     layout: vertical;
     background: $boost;
     height: 20;
-    margin: 1;
-    min-width: 50;
-    padding: 1;
+    padding:2;
 }
 
 #repsonse {
@@ -19,7 +17,6 @@ Request {
 }
 
 Button {
-    width: 15;
 }
 
 #send {
@@ -28,4 +25,24 @@ Button {
 
 #import {
     dock: bottom;
+}
+
+.header{
+    layout: horizontal;
+    max-height: 5;
+}
+
+#key, #value {
+    width: 1fr;
+    max-width: 1fr;
+}
+
+.body {
+    max-width: 5fr;
+}
+#methods{
+    layout: horizontal;
+    margin: 1;
+    padding: 0;
+    width: 5fr;
 }
