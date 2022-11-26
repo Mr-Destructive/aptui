@@ -38,6 +38,7 @@ class RequestMethods(Static):
         """Create child widgets of a request methods."""
         yield Button("GET", id="get")
         yield Button("POST", id="post")
+        yield Button("PUT", id="put")
         yield Button("PATCH", id="patch")
         yield Button("DELETE", id="delete")
 
@@ -88,6 +89,13 @@ class RequestContainer(Static):
         self.query_one("#response_text", Static).update(resp["response"])
         self.query_one("#status_code", Static).update(resp["status_code"])
 
+    def put_request(self, url: str, body: dict, headers: dict) -> dict:
+        # resp = requests.post(url, data=body, headers=headers)
+        resp = requests.request("PUT", url, headers=headers, json=body)
+        if resp.status_code not in range(200, 227):
+            return self.catch_response(resp)
+        return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Event handler called when a button is pressed."""
         button_id = event.button.id
@@ -105,6 +113,11 @@ class RequestContainer(Static):
                 resp = self.delete_request(url=url)
                 self.query_one("#response_text", Static).update(resp["response"])
                 self.query_one("#status_code", Static).update(resp["status_code"])
+            elif self.method_choide == "PUT":
+                body = json.loads(self.query_one("#body_inp").value) or {}
+                resp = self.put_request(url=url, body=body, headers={})
+                self.query_one("#response_text", Static).update(resp["response"])
+                self.query_one("#status_code", Static).update(resp["status_code"])
             else:
                 url = self.query(Input).first().value
                 resp = self.get_request(url)
@@ -116,6 +129,8 @@ class RequestContainer(Static):
             self.method_choide = "GET"
         elif button_id == "delete":
             self.method_choide = "DELETE"
+        elif button_id == "put":
+            self.method_choide = "PUT"
 
         elif button_id == "import":
             curl = pyperclip.paste()
