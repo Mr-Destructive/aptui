@@ -1,4 +1,5 @@
 import json
+from typing import List
 import pyperclip
 import requests
 from textual.app import App, ComposeResult
@@ -9,7 +10,13 @@ from textual.widgets import Button, Header, Footer, Input, Static
 
 class Response(Static):
     """A widget to display Response"""
+    def compose(self) -> ComposeResult:
+        """Create child widgets of response"""
+        yield Static(id="response_text")
+        yield Static(id="status_code")
 
+    def on_mount(self) -> None:
+        self.styles.height = "auto"
 
 class RequestHeader(Static):
     def compose(self) -> ComposeResult:
@@ -43,9 +50,17 @@ class RequestContainer(Static):
 
     method_choide = "GET"
 
-    def get_response(self, url: str) -> str:
-        resp = json.loads(requests.get(url).content).__str__()
-        return resp
+    def catch_response(self, resp: requests.Response) -> dict:
+        try:
+            return {"status_code": str(resp.status_code), "response": resp.text}
+        except json.JSONDecodeError as e:
+            return {"status_code": str(resp.status_code), "response": "ERRO"}
+
+    def get_request(self, url: str) -> dict:
+        resp = requests.get(url)
+        if resp.status_code not in range(200, 227):
+            return self.catch_response(resp)
+        return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
 
     def get_headers(self) -> dict:
         headers = self.query(".headers")
@@ -54,17 +69,24 @@ class RequestContainer(Static):
 
         return {}
 
-    def post_request(self, url: str, body: dict, headers: dict) -> str:
+    def post_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
         resp = requests.request("POST", url, headers=headers, json=body)
         if resp.status_code not in range(200, 227):
-            return f"{resp.status_code} -> ERROR {resp.json()}"
-        return resp.content.decode("ascii")
+            return self.catch_response(resp)
+        return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
+
+    def delete_request(self, url: str) -> dict:
+        resp = requests.request("DELETE", url)
+        if resp.status_code not in range(200, 227):
+            return self.catch_response(resp)
+        return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
 
     def on_input_submitted(self, message: Input.Submitted) -> None:
         url = message.value
-        resp = self.get_response(url)
-        self.query_one("#response", Static).update(resp)
+        resp = self.get_request(url)
+        self.query_one("#response_text", Static).update(resp["response"])
+        self.query_one("#status_code", Static).update(resp["status_code"])
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Event handler called when a button is pressed."""
@@ -77,20 +99,27 @@ class RequestContainer(Static):
                 resp = self.post_request(
                     url, body=body, headers={}
                 )  # , headers=headers)
-                self.query_one("#response", Static).update(resp)
+                self.query_one("#response_text", Static).update(resp["response"])
+                self.query_one("#status_code", Static).update(resp["status_code"])
+            elif self.method_choide == "DELETE":
+                resp = self.delete_request(url=url)
+                self.query_one("#response_text", Static).update(resp["response"])
+                self.query_one("#status_code", Static).update(resp["status_code"])
             else:
                 url = self.query(Input).first().value
-                resp = self.get_response(url)
-                self.query_one("#response", Static).update(resp)
+                resp = self.get_request(url)
+                self.query_one("#response_text", Static).update(resp["response"])
 
         elif button_id == "post":
             self.method_choide = "POST"
         elif button_id == "get":
             self.method_choide = "GET"
+        elif button_id == "delete":
+            self.method_choide = "DELETE"
 
         elif button_id == "import":
             curl = pyperclip.paste()
-            resp = self.get_response(curl)
+            resp = self.get_request(curl)
             self.query_one("#response", Static).update(resp)
 
         elif button_id == "add_req":
@@ -105,8 +134,8 @@ class RequestContainer(Static):
         yield Button("Import", id="import", variant="error")
         yield RequestMethods("Rquest Methods", id="methods", classes="body")
         yield RequestHeader()
-        yield Body(id="body")
-        yield Response("Response", id="response")
+        yield Body(expand=True, id="body")
+        yield Response("Response", expand=True, id="response")
 
     def on_mount(self) -> None:
         self.styles.height = "auto"

@@ -39,10 +39,29 @@ Button {
 
 .body {
     max-width: 5fr;
+    max-height: 1fr;
 }
 #methods{
     layout: horizontal;
     margin: 1;
     padding: 0;
     width: 5fr;
+}
+
+#status_code{
+    dock: right;
+    width: 0.1fr;
+    height: 0.1fr;
+    background: white;
+    color: black;
+    text-align: center;
+    padding: 2;
+    text-style: bold;
+}
+
+#response_text{
+    padding: 2;
+    background: #333333;
+    color: white;
+    border: solid white;
 }
