@@ -83,18 +83,35 @@ class RequestContainer(Static):
             return self.catch_response(resp)
         return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
 
-    def on_input_submitted(self, message: Input.Submitted) -> None:
-        url = message.value
-        resp = self.get_request(url)
-        self.query_one("#response_text", Static).update(resp["response"])
-        self.query_one("#status_code", Static).update(resp["status_code"])
-
     def put_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
         resp = requests.request("PUT", url, headers=headers, json=body)
         if resp.status_code not in range(200, 227):
             return self.catch_response(resp)
         return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
+
+    def patch_request(self, url: str, body: dict, headers: dict) -> dict:
+        # resp = requests.post(url, data=body, headers=headers)
+        resp = requests.request("PATCH", url, headers=headers, json=body)
+        if resp.status_code not in range(200, 227):
+            return self.catch_response(resp)
+        return {"status_code": str(resp.status_code), "response": resp.content.decode("ascii")}
+
+    def on_input_submitted(self, message: Input.Submitted) -> None:
+        url = message.value
+        body = json.loads(self.query_one("#body_inp").value) or {}
+        if self.method_choide == "POST":
+            resp = self.post_request(url, body=body, headers={})
+        elif self.method_choide == "PUT":
+            resp = self.put_request(url, body=body, headers={})
+        elif self.method_choide == "PATCH":
+            resp = self.patch_request(url, body=body, headers={})
+        elif self.method_choide == "DELETE":
+            resp = self.delete_request(url)
+        else:
+            resp = self.get_request(url)
+        self.query_one("#response_text", Static).update(resp["response"])
+        self.query_one("#status_code", Static).update(resp["status_code"])
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Event handler called when a button is pressed."""
@@ -118,6 +135,11 @@ class RequestContainer(Static):
                 resp = self.put_request(url=url, body=body, headers={})
                 self.query_one("#response_text", Static).update(resp["response"])
                 self.query_one("#status_code", Static).update(resp["status_code"])
+            elif self.method_choide == "PATCH":
+                body = json.loads(self.query_one("#body_inp").value) or {}
+                resp = self.patch_request(url=url, body=body, headers={})
+                self.query_one("#response_text", Static).update(resp["response"])
+                self.query_one("#status_code", Static).update(resp["status_code"])
             else:
                 url = self.query(Input).first().value
                 resp = self.get_request(url)
@@ -131,6 +153,8 @@ class RequestContainer(Static):
             self.method_choide = "DELETE"
         elif button_id == "put":
             self.method_choide = "PUT"
+        elif button_id == "patch":
+            self.method_choide = "PATCH"
 
         elif button_id == "import":
             curl = pyperclip.paste()
