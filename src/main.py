@@ -1,7 +1,6 @@
 import json
 import curl
 import uncurl
-from typing import List
 import pyperclip
 import requests
 from textual.app import App, ComposeResult
@@ -28,7 +27,7 @@ class RequestHeader(Static):
         yield Container(
             Input(placeholder="key", id="key"),
             Input(placeholder="value", id="value"),
-            classes="header",
+            id="header",
         )
 
 
@@ -54,6 +53,16 @@ class RequestContainer(Static):
     """A APTUI widget."""
 
     method_choice = "GET"
+    headers_dict = {}
+
+    def get_headers(self) -> dict:
+        headers = self.query("#header")
+        for header in headers:
+            key = header.query_one("#key").value
+            value = header.query_one("#value").value
+            if key and value:
+                self.headers_dict[key] = value
+        return self.headers_dict
 
     def catch_response(self, resp: requests.Response) -> dict:
         try:
@@ -70,15 +79,10 @@ class RequestContainer(Static):
             "response": resp.content.decode("ascii"),
         }
 
-    def get_headers(self) -> dict:
-        headers = self.query(".headers")
-        for header in headers:
-            kv_pair = header
-
-        return {}
 
     def post_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
+        headers = self.get_headers() or {}
         resp = requests.request("POST", url, headers=headers, json=body)
         if resp.status_code not in range(200, 227):
             return self.catch_response(resp)
@@ -98,6 +102,7 @@ class RequestContainer(Static):
 
     def put_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
+        headers = self.get_headers() or {}
         resp = requests.request("PUT", url, headers=headers, json=body)
         if resp.status_code not in range(200, 227):
             return self.catch_response(resp)
@@ -108,6 +113,7 @@ class RequestContainer(Static):
 
     def patch_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
+        headers = self.get_headers() or {}
         resp = requests.request("PATCH", url, headers=headers, json=body)
         if resp.status_code not in range(200, 227):
             return self.catch_response(resp)
@@ -220,12 +226,17 @@ class RequestContainer(Static):
             self.query_one("#reqheaders").mount(headers)
             headers.scroll_visible()
 
+        elif button_id == "add_head":
+            header = RequestHeader(id="header")
+            self.query_one("#headers").mount(header)
+
     def compose(self) -> ComposeResult:
         """Create child widgets of a API Request."""
         yield Input(placeholder="URL", id="url")
         yield Button("Send", id="send", variant="success")
         yield RequestMethods("Rquest Methods", id="methods", classes="body")
-        yield RequestHeader()
+        yield Container(RequestHeader(), id="headers")
+        yield Button("Add Header", id="add_head")
         yield Body(expand=True, id="body")
         yield Response("Response", expand=True, id="response")
         yield Button("Copy Curl", id="tocurl")

@@ -31,8 +31,12 @@ Button {
 */
 
 .header{
-    layout: horizontal;
+    layout: vertical;
     max-height: 5;
+}
+#headers{
+    max-height: 5;
+    width: 1fr;
 }
 
 #key, #value {
@@ -67,4 +71,8 @@ Button {
     background: #333333;
     color: white;
     border: solid white;
+}
+
+RequestHeader {
+    layout: horizontal;
 }
