@@ -2,15 +2,18 @@
     height: 100fr;
     max-height: 100%;
 }
+
 RequestContainer {
     layout: vertical;
     background: $boost;
-    height: 20;
     padding:2;
     border: solid white;
+    width: 1fr;
+    height: 20;
 }
 
 #repsonse {
+    width: 1fr;
     content-align: left bottom;
     text-opacity: 100%;
     dock: left;
@@ -30,13 +33,13 @@ Button {
 }
 */
 
-.header{
-    layout: vertical;
-    max-height: 5;
+#header{
+    layout: horizontal;
 }
 #headers{
-    max-height: 5;
     width: 1fr;
+    max-height: 1fr;
+    height: 1fr;
 }
 
 #key, #value {
@@ -45,24 +48,26 @@ Button {
 }
 
 .body {
-    max-width: 5fr;
     max-height: 1fr;
+    max-width: 1fr;
+    width: 1fr;
 }
+
 #methods{
     layout: horizontal;
     margin: 1;
     padding: 0;
-    width: 5fr;
 }
 
 #status_code{
     dock: right;
-    width: 0.1fr;
+    width: 0.15fr;
     height: 0.1fr;
     background: white;
     color: black;
     text-align: center;
     padding: 2;
+    border: solid black;
     text-style: bold;
 }
 
@@ -74,5 +79,21 @@ Button {
 }
 
 RequestHeader {
+    padding: 0;
+    height: 5;
+}
+
+#get, #post, #patch, #put, #delete {
+    width: 1fr;
+    max-width: 1fr;
+}
+
+#opts{
     layout: horizontal;
+    height: 1fr;
+}
+
+#tocurl, #importcurl, #savereq, #loadreq{
+    border: black;
+    padding: 0;
 }
