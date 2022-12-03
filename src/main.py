@@ -358,7 +358,10 @@ class APTUI(App):
         """An action to add a request"""
         self.add_request_widget(RequestContainer())
 
-
-if __name__ == "__main__":
+def main():
     app = APTUI()
     app.run()
+
+if __name__ == "__main__":
+    main()
+
