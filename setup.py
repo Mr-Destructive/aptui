@@ -31,5 +31,5 @@ setup(
     url=URL,
     install_requires=INSTALL_REQUIRES,
     packages=find_packages(),
-    entry_points={"console_scripts": ["aptui = src.main:main"]},
+    entry_points={"console_scripts": ["aptui = aptui.main:main"]},
 )
