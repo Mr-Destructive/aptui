@@ -67,40 +67,38 @@ class RequestContainer(Static):
         headers = self.get_headers() or {}
         method = self.method_choice
         request_json = {
-                'url': url,
-                'method': method,
-                'headers': headers,
-                'body': body,
+            "url": url,
+            "method": method,
+            "headers": headers,
+            "body": body,
         }
-        request_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+        request_name = "".join(
+            random.choices(string.ascii_lowercase + string.digits, k=5)
+        )
         name = f"request-{method.lower()}-{request_name}"
         Path(self.req_path).mkdir(parents=True, exist_ok=True)
-        with open(f"{self.req_path}{name}.json", 'w+') as f:
+        with open(f"{self.req_path}{name}.json", "w+") as f:
             json.dump(request_json, f)
 
     def load_request(self):
         dir_tree = DirectoryTree(self.req_path)
         self.query_one("#response_text").mount(dir_tree)
         files = os.listdir(self.req_path)
-        with open(f"{self.req_path}{files[0]}", 'r') as f:
+        with open(f"{self.req_path}{files[0]}", "r") as f:
             request_json = json.load(f)
-        url = request_json['url']
-        method = request_json['method']
-        body = request_json['body']
-        headers = request_json['headers']
+        url = request_json["url"]
+        method = request_json["method"]
+        body = request_json["body"]
+        headers = request_json["headers"]
 
         aptui = self.parent.query_one("#aptui")
         loaded_request = RequestContainer()
         aptui.mount(loaded_request)
         request_widget = self.parent.query("#request")
-        print(request_widget.results())
         for i in request_widget.results():
-            print(i.__dict__)
         request_widget = aptui.query("#request").last()
         request_widget.query_one("#url").value = url
         request_widget.method_choice = method
-        print(dir_tree.__dict__)
-
 
     def get_headers(self) -> dict:
         headers = self.query("#header")
@@ -125,7 +123,6 @@ class RequestContainer(Static):
             "status_code": str(resp.status_code),
             "response": resp.content.decode("ascii"),
         }
-
 
     def post_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
@@ -205,10 +202,9 @@ class RequestContainer(Static):
 
             for i in self.method_list:
                 button = self.query_one(f"#{i.lower()}")
-                print(button.styles.background)
                 background_color = "#24292f"
                 if i == self.method_choice:
-                    button.styles.background= "green"
+                    button.styles.background = "green"
                 else:
                     button.styles.background = background_color
             url = self.query(Input).first().value
@@ -302,11 +298,11 @@ class RequestContainer(Static):
         yield Body(expand=True, id="body")
         yield Response("Response", expand=True, id="response")
         yield Container(
-                Button("Copy Curl", id="tocurl"),
-                Button("Import", id="importcurl"),
-                Button("Save", id="savereq"),
-                Button("Load", id="loadreq"),
-                id="opts",
+            Button("Copy Curl", id="tocurl"),
+            Button("Import", id="importcurl"),
+            Button("Save", id="savereq"),
+            Button("Load", id="loadreq"),
+            id="opts",
         )
 
     def on_mount(self) -> None:
@@ -358,10 +354,11 @@ class APTUI(App):
         """An action to add a request"""
         self.add_request_widget(RequestContainer())
 
+
 def main():
     app = APTUI()
     app.run()
 
+
 if __name__ == "__main__":
     main()
-
