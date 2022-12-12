@@ -11,19 +11,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Container
 from textual.reactive import var
 from textual.widgets import Button, Header, Footer, Input, Static, DirectoryTree
-
-
-class Response(Static):
-    """A widget to display Response"""
-
-    def compose(self) -> ComposeResult:
-        """Create child widgets of response"""
-        yield Static("Response", id="response_text")
-        yield Static("Status Code", id="status_code")
-
-    def on_mount(self) -> None:
-        self.styles.height = "auto"
-
+from widgets.response import Response
 
 class RequestHeader(Static):
     def compose(self) -> ComposeResult:
@@ -96,9 +84,9 @@ class RequestContainer(Static):
         aptui.mount(loaded_request)
         request_widget = self.parent.query("#request")
         for i in request_widget.results():
-        request_widget = aptui.query("#request").last()
-        request_widget.query_one("#url").value = url
-        request_widget.method_choice = method
+            request_widget = aptui.query("#request").last()
+            request_widget.query_one("#url").value = url
+            request_widget.method_choice = method
 
     def get_headers(self) -> dict:
         headers = self.query("#header")
@@ -191,15 +179,16 @@ class RequestContainer(Static):
             url = self.query_one("#url").value
             body = self.query_one("#body_inp").value or {}
             method = self.method_choice
-            if not body or button_id in ["DELETE", "GET"]:
-                request = requests.request(method, url)
-            else:
-                body = json.loads(body)
-                request = requests.request(method, url, json=body, headers={})
-            c = curl.parse(request, return_it=True)
-            pyperclip.copy(c)
-        if button_id == "send":
+            if url:
+                if not body or button_id in ["DELETE", "GET"]:
+                    request = requests.request(method, url)
+                else:
+                    body = json.loads(body)
+                    request = requests.request(method, url, json=body, headers={})
+                c = curl.parse(request, return_it=True)
+                pyperclip.copy(c)
 
+        if button_id == "send":
             for i in self.method_list:
                 button = self.query_one(f"#{i.lower()}")
                 background_color = "#24292f"
@@ -210,28 +199,28 @@ class RequestContainer(Static):
             url = self.query(Input).first().value
             if self.method_choice == "POST":
                 body = self.query_one("#body_inp").value or {}
-                if body:
+                if body and url:
                     body = json.loads(body)
                 # headers = self.query(".header").first().value or {}
-                resp = self.post_request(
-                    url, body=body, headers={}
-                )  # , headers=headers)
-                self.query_one("#response_text", Static).update(resp["response"])
-                self.query_one("#status_code", Static).update(resp["status_code"])
+                    resp = self.post_request(
+                        url, body=body, headers={}
+                    )  # , headers=headers)
+                    self.query_one("#response_text", Static).update(resp["response"])
+                    self.query_one("#status_code", Static).update(resp["status_code"])
             elif self.method_choice == "DELETE":
                 resp = self.delete_request(url=url)
                 self.query_one("#response_text", Static).update(resp["response"])
                 self.query_one("#status_code", Static).update(resp["status_code"])
             elif self.method_choice == "PUT":
                 body = self.query_one("#body_inp").value or {}
-                if body:
+                if body and url:
                     body = json.loads(body)
-                resp = self.put_request(url=url, body=body, headers={})
-                self.query_one("#response_text", Static).update(resp["response"])
-                self.query_one("#status_code", Static).update(resp["status_code"])
+                    resp = self.put_request(url=url, body=body, headers={})
+                    self.query_one("#response_text", Static).update(resp["response"])
+                    self.query_one("#status_code", Static).update(resp["status_code"])
             elif self.method_choice == "PATCH":
                 body = self.query_one("#body_inp").value or {}
-                if body:
+                if body and url:
                     body = json.loads(body)
                 resp = self.patch_request(url=url, body=body, headers={})
                 self.query_one("#response_text", Static).update(resp["response"])
