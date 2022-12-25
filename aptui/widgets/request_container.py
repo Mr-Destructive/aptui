@@ -16,9 +16,11 @@ from widgets.response import Response
 from widgets.request_headers import RequestHeader
 from widgets.request_methods import RequestMethods
 
+
 class Body(Static):
     def compose(self) -> ComposeResult:
         yield Input(placeholder="Body", id="body_inp")
+
 
 class RequestContainer(Static):
     """A APTUI widget."""
@@ -180,7 +182,7 @@ class RequestContainer(Static):
                 body = self.query_one("#body_inp").value or {}
                 if body and url:
                     body = json.loads(body)
-                # headers = self.query(".header").first().value or {}
+                    # headers = self.query(".header").first().value or {}
                     resp = self.post_request(
                         url, body=body, headers={}
                     )  # , headers=headers)
@@ -256,6 +258,10 @@ class RequestContainer(Static):
             header = RequestHeader(id="header")
             self.query_one("#headers").mount(header)
 
+        elif button_id == "copyresp":
+            response_text = str(self.query_one("#response_text").renderable)
+            pyperclip.copy(response_text)
+
     def compose(self) -> ComposeResult:
         """Create child widgets of a API Request."""
         yield Input(placeholder="URL", id="url")
@@ -270,6 +276,7 @@ class RequestContainer(Static):
             Button("Import", id="importcurl"),
             Button("Save", id="savereq"),
             Button("Load", id="loadreq"),
+            Button("Copy Response", id="copyresp"),
             id="opts",
         )
 

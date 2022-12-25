@@ -1,6 +1,7 @@
 from textual.app import ComposeResult
 from textual.widgets import Static, Button
 
+
 class RequestMethods(Static):
     def compose(self) -> ComposeResult:
         """Create child widgets of a request methods."""

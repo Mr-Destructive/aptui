@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.containers import Container
 from textual.reactive import var
-from textual.widgets import Button, Header, Footer, Input 
+from textual.widgets import Button, Header, Footer
 from widgets.request_container import RequestContainer
 
 

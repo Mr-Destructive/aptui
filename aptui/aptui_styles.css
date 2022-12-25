@@ -93,7 +93,7 @@ RequestHeader {
     height: 1fr;
 }
 
-#tocurl, #importcurl, #savereq, #loadreq{
+#tocurl, #importcurl, #savereq, #loadreq, #copyresp{
     border: black;
     padding: 0;
 }
