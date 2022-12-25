@@ -11,6 +11,7 @@ from pathlib import Path
 from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Static, Input, Button, DirectoryTree
+from urllib.parse import urlparse
 
 from widgets.response import Response
 from widgets.request_headers import RequestHeader
@@ -85,13 +86,21 @@ class RequestContainer(Static):
             return {"status_code": str(resp.status_code), "response": "ERROR"}
 
     def get_request(self, url: str) -> dict:
-        resp = requests.get(url)
-        if resp.status_code not in range(200, 227):
-            return self.catch_response(resp)
-        return {
-            "status_code": str(resp.status_code),
-            "response": resp.content.decode("ascii"),
-        }
+        urlp = urlparse(url)
+        url_valid = all([urlp.scheme, urlp.netloc])
+        if url and url_valid:
+            resp = requests.get(url)
+            if resp.status_code not in range(200, 227):
+                return self.catch_response(resp)
+            return {
+                "status_code": str(resp.status_code),
+                "response": resp.content.decode("ascii"),
+            }
+        else:
+            return {
+                "status_code": "000",
+                "response": "Invalid URL",
+            }
 
     def post_request(self, url: str, body: dict, headers: dict) -> dict:
         # resp = requests.post(url, data=body, headers=headers)
@@ -160,7 +169,9 @@ class RequestContainer(Static):
             url = self.query_one("#url").value
             body = self.query_one("#body_inp").value or {}
             method = self.method_choice
-            if url:
+            urlp = urlparse(url)
+            url_valid = all([urlp.scheme, urlp.netloc])
+            if url and url_valid:
                 if not body or button_id in ["DELETE", "GET"]:
                     request = requests.request(method, url)
                 else:
@@ -180,7 +191,9 @@ class RequestContainer(Static):
             url = self.query(Input).first().value
             if self.method_choice == "POST":
                 body = self.query_one("#body_inp").value or {}
-                if body and url:
+                urlp = urlparse(url)
+                url_valid = all([urlp.scheme, urlp.netloc])
+                if body and url_valid:
                     body = json.loads(body)
                     # headers = self.query(".header").first().value or {}
                     resp = self.post_request(
@@ -194,14 +207,18 @@ class RequestContainer(Static):
                 self.query_one("#status_code", Static).update(resp["status_code"])
             elif self.method_choice == "PUT":
                 body = self.query_one("#body_inp").value or {}
-                if body and url:
+                urlp = urlparse(url)
+                url_valid = all([urlp.scheme, urlp.netloc])
+                if body and url_valid:
                     body = json.loads(body)
                     resp = self.put_request(url=url, body=body, headers={})
                     self.query_one("#response_text", Static).update(resp["response"])
                     self.query_one("#status_code", Static).update(resp["status_code"])
             elif self.method_choice == "PATCH":
                 body = self.query_one("#body_inp").value or {}
-                if body and url:
+                urlp = urlparse(url)
+                url_valid = all([urlp.scheme, urlp.netloc])
+                if body and url_valid:
                     body = json.loads(body)
                 resp = self.patch_request(url=url, body=body, headers={})
                 self.query_one("#response_text", Static).update(resp["response"])
