@@ -1,5 +1,6 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Static
+from textual.containers import Vertical
+from textual.widgets import Static, Label
 
 
 class Response(Static):
@@ -12,4 +13,5 @@ class Response(Static):
 
     def on_mount(self) -> None:
         self.scroll_visible()
-        self.styles.height = "auto"
+        #self.query_one("#response_text").styles.height = "auto"
+        self.query_one("#response_text").expand = True

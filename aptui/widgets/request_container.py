@@ -10,7 +10,7 @@ import uncurl
 from pathlib import Path
 from textual.app import ComposeResult
 from textual.containers import Container
-from textual.widgets import Static, Input, Button, DirectoryTree
+from textual.widgets import Static, Input, Button, DirectoryTree, Label
 from urllib.parse import urlparse
 
 from widgets.response import Response
@@ -146,6 +146,8 @@ class RequestContainer(Static):
 
     def on_input_submitted(self, message: Input.Submitted) -> None:
         url = message.value
+        if self.method_choice == "GET":
+            resp = self.get_request(url)
         if self.method_choice == "POST":
             body = json.loads(self.query_one("#body_inp").value) or {}
             resp = self.post_request(url, body=body, headers={})
@@ -158,7 +160,15 @@ class RequestContainer(Static):
         elif self.method_choice == "DELETE":
             resp = self.delete_request(url)
         else:
-            resp = self.get_request(url)
+            ...
+            #resp = self.get_request(url)
+        for i in self.method_list:
+            button = self.query_one(f"#{i.lower()}")
+            background_color = "#24292f"
+            if i == self.method_choice:
+                button.styles.background = "green"
+            else:
+                button.styles.background = background_color
         self.query_one("#response_text", Static).update(resp["response"])
         self.query_one("#status_code", Static).update(resp["status_code"])
 
@@ -287,7 +297,6 @@ class RequestContainer(Static):
         yield Container(RequestHeader(), id="headers")
         yield Button("Add Header", id="add_head")
         yield Body(expand=True, id="body")
-        yield Response("Response", expand=True, id="response")
         yield Container(
             Button("Copy Curl", id="tocurl"),
             Button("Import", id="importcurl"),
@@ -296,6 +305,7 @@ class RequestContainer(Static):
             Button("Copy Response", id="copyresp"),
             id="opts",
         )
+        yield Response("Response", expand=True, id="response")
 
     def on_mount(self) -> None:
         self.styles.height = "auto"

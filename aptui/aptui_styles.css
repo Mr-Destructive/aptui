@@ -12,12 +12,15 @@ RequestContainer {
     height: 20;
 }
 
-#repsonse {
+#response {
+    /*
     width: 1fr;
     content-align: left bottom;
     text-opacity: 100%;
     dock: left;
     padding: 5;
+    */
+    overflow: scroll;
 }
 
 Button {
@@ -27,19 +30,13 @@ Button {
     dock: right;
 }
 
-/*
-#import {
-    dock: bottom;
-}
-*/
-
 #header{
     layout: horizontal;
 }
 #headers{
     width: 1fr;
     max-height: 1fr;
-    height: 1fr;
+    height: 5;
 }
 
 #key, #value {
@@ -73,9 +70,10 @@ Button {
 
 #response_text{
     padding: 2;
-    background: #333333;
     color: white;
     border: solid white;
+    max-height: 100vh;
+    overflow: scroll;
 }
 
 RequestHeader {
@@ -90,7 +88,7 @@ RequestHeader {
 
 #opts{
     layout: horizontal;
-    height: 1fr;
+    height: 2fr;
 }
 
 #tocurl, #importcurl, #savereq, #loadreq, #copyresp{
