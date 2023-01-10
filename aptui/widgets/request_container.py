@@ -13,9 +13,9 @@ from textual.containers import Container
 from textual.widgets import Static, Input, Button, DirectoryTree, Label
 from urllib.parse import urlparse
 
-from widgets.response import Response
-from widgets.request_headers import RequestHeader
-from widgets.request_methods import RequestMethods
+from .response import Response
+from .request_headers import RequestHeader
+from .request_methods import RequestMethods
 
 
 class Body(Static):

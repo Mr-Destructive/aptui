@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "APTUI"
+description = "Test APIs right from your terminal with a TUI"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["api", "aptui"]
+classifiers = [
+    "Framework :: Textual",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "requests",
+    "textual",
+    "pyperclip",
+    "uncurl",
+    "requests-to-curl",
+]
+dynamic = ["version"]
+
+[project.scripts]
+aptui = "aptui.main:main"
