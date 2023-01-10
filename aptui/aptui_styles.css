@@ -10,20 +10,13 @@ RequestContainer {
     border: solid white;
     width: 1fr;
     height: 20;
+    /*
+    overflow-y: scroll;
+    */
 }
 
 #response {
-    /*
-    width: 1fr;
-    content-align: left bottom;
-    text-opacity: 100%;
-    dock: left;
-    padding: 5;
-    */
-    overflow: scroll;
-}
-
-Button {
+    height: 20;
 }
 
 #send {
@@ -59,21 +52,21 @@ Button {
 #status_code{
     dock: right;
     width: 0.15fr;
-    height: 0.1fr;
-    background: white;
+    height: 0.35fr;
     color: black;
-    text-align: center;
-    padding: 2;
-    border: solid black;
+    background: white;
     text-style: bold;
+    text-align: center;
 }
 
 #response_text{
     padding: 2;
     color: white;
     border: solid white;
+    /*
     max-height: 100vh;
     overflow: scroll;
+    */
 }
 
 RequestHeader {
@@ -88,7 +81,7 @@ RequestHeader {
 
 #opts{
     layout: horizontal;
-    height: 2fr;
+    height: 3fr;
 }
 
 #tocurl, #importcurl, #savereq, #loadreq, #copyresp{

@@ -15,6 +15,7 @@ class APTUI(App):
         ("r", "add_request", "Add"),
     ]
     content = var("0")
+    req = var("0")
 
     def add_request_widget(
         self, req_widget: RequestContainer = RequestContainer()
@@ -26,11 +27,13 @@ class APTUI(App):
         """Called when a button is pressed."""
         button_id = event.button.id
         if button_id == "add_req":
-            self.add_request_widget(RequestContainer(id="request"))
+            self.add_request_widget(RequestContainer())
+            self.req += 1
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield Button("Add Request", id="add_req", variant="success")
+        # TODO: FIX: Causes the app to stop err
+        #yield Button("Add Request", id="add_req", variant="success")
         yield Header()
         yield Footer()
         yield Container(RequestContainer(id="request"), id="aptui")

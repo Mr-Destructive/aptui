@@ -19,7 +19,7 @@ dependencies = [
     "uncurl",
     "requests-to-curl",
 ]
-dynamic = ["version"]
+dynamic = ["0.0.5"]
 
 [project.scripts]
 aptui = "aptui.main:main"
