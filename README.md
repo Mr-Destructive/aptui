@@ -10,6 +10,12 @@ API + TUI = APTUI
 
 It's quite a fresh project and is in it's initial stage of development.
 
+## Installation
+
+```
+pip install git+https://github.com/mr-destructive/aptui
+```
+
 ### TODO
 
 - Improve UI
