@@ -1,3 +1,12 @@
+## [0.1.1](https://github.com/Mr-Destructive/aptui/compare/v0.1.0...v0.1.1) (2023-01-12)
+
+
+### Bug Fixes
+
+* layout of response and minor bugs ([fd217c6](https://github.com/Mr-Destructive/aptui/commit/fd217c6e926bb7054a6a86ff08055d525e7bb2cc))
+
+
+
 # [0.1.0](https://github.com/Mr-Destructive/aptui/compare/v0.0.2...v0.1.0) (2023-01-10)
 
 
