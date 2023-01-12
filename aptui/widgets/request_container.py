@@ -61,13 +61,14 @@ class RequestContainer(Static):
         body = request_json["body"]
         headers = request_json["headers"]
 
-        aptui = self.parent.query_one("#aptui")
+        aptui = self.parent
         loaded_request = RequestContainer()
         aptui.mount(loaded_request)
         request_widget = self.parent.query("#request")
         for i in request_widget.results():
             request_widget = aptui.query("#request").last()
             request_widget.query_one("#url").value = url
+            header = request_widget.query("#header")
             request_widget.method_choice = method
 
     def get_headers(self) -> dict:
@@ -87,9 +88,10 @@ class RequestContainer(Static):
 
     def get_request(self, url: str) -> dict:
         urlp = urlparse(url)
+        headers = self.get_headers() or {}
         url_valid = all([urlp.scheme, urlp.netloc])
         if url and url_valid:
-            resp = requests.get(url)
+            resp = requests.request("GET", url, headers=headers)
             if resp.status_code not in range(200, 227):
                 return self.catch_response(resp)
             return {
@@ -98,7 +100,7 @@ class RequestContainer(Static):
             }
         else:
             return {
-                "status_code": "000",
+                "status_code": "XXX",
                 "response": "Invalid URL",
             }
 
@@ -161,7 +163,7 @@ class RequestContainer(Static):
             resp = self.delete_request(url)
         else:
             ...
-            #resp = self.get_request(url)
+            # resp = self.get_request(url)
         for i in self.method_list:
             button = self.query_one(f"#{i.lower()}")
             background_color = "#24292f"
@@ -271,7 +273,7 @@ class RequestContainer(Static):
             self.method_choice = method
 
         elif button_id == "add_req":
-            headers = RequestHeader(id="headers")
+            headers = RequestHeader()
             self.query_one("#reqheaders").mount(headers)
             headers.scroll_visible()
 
@@ -282,7 +284,7 @@ class RequestContainer(Static):
             self.load_request()
 
         elif button_id == "add_head":
-            header = RequestHeader(id="header")
+            header = RequestHeader()
             self.query_one("#headers").mount(header)
 
         elif button_id == "copyresp":

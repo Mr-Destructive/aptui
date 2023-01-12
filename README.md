@@ -12,8 +12,18 @@ It's quite a fresh project and is in it's initial stage of development.
 
 ## Installation
 
+
+- With Normal package installation:
+
 ```
 pip install git+https://github.com/mr-destructive/aptui
+aptui
+```
+
+- With pipx:
+
+```
+pipx run --spec git+https://github.com/mr-destructive/aptui aptui
 ```
 
 ### TODO
@@ -21,6 +31,8 @@ pip install git+https://github.com/mr-destructive/aptui
 - Improve UI
 - Allow expandable response text
 - Fix and Improve Copy from Curl Feature
+- Save and Load requests from previous session/file
+- Tabulate different requests instead of scroll tree
 
 ### DONE
 

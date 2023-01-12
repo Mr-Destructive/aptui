@@ -1,6 +1,10 @@
 #aptui {
+    /*
+    height: auto;
     height: 100fr;
     max-height: 100%;
+    max-height: 100vh;
+    */
 }
 
 RequestContainer {
@@ -9,14 +13,29 @@ RequestContainer {
     padding:2;
     border: solid white;
     width: 1fr;
-    height: 20;
+    overflow-y: scroll;
+    max-height: 100vh;
     /*
+    max-height: 100vh;
     overflow-y: scroll;
     */
 }
 
+#resp_container{
+    layout: vertical;
+    overflow-y: scroll;
+    overflow: scroll;
+    height: auto;
+}
+
 #response {
-    height: 20;
+    overflow-y: scroll;
+    /*
+    height: auto;
+    overflow: scroll;
+    height: 100%;
+    max-height: 100fr;
+    */
 }
 
 #send {
@@ -26,6 +45,7 @@ RequestContainer {
 #header{
     layout: horizontal;
 }
+
 #headers{
     width: 1fr;
     max-height: 1fr;
@@ -60,12 +80,14 @@ RequestContainer {
 }
 
 #response_text{
-    padding: 2;
+    padding: 3;
     color: white;
     border: solid white;
+    height: auto;
+    overflow-y: scroll;
     /*
-    max-height: 100vh;
     overflow: scroll;
+    max-height: 100vh;
     */
 }
 
