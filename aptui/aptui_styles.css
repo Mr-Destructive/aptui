@@ -30,6 +30,7 @@ RequestContainer {
 
 #response {
     overflow-y: scroll;
+    max-height: 100vh;
     /*
     height: auto;
     overflow: scroll;

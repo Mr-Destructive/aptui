@@ -8,11 +8,13 @@ class Response(Static):
 
     def compose(self) -> ComposeResult:
         """Create child widgets of response"""
-        yield Container(
-            Static("Response", id="response_text"),
-            Static("Status Code", id="status_code"),
-            id="resp_container",
-        )
+        #yield Container(
+        #    Static("Response", id="response_text"),
+        #    Static("Status Code", id="status_code"),
+        #    id="resp_container",
+        #)
+        yield Static("Response", id="response_text")
+        yield Static("Status Code", id="status_code")
 
     def on_mount(self) -> None:
         self.scroll_visible()
