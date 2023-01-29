@@ -188,7 +188,8 @@ class RequestContainer(Static):
                     request = requests.request(method, url)
                 else:
                     body = json.loads(body)
-                    request = requests.request(method, url, json=body, headers={})
+                    request = requests.request(
+                        method, url, json=body, headers={})
                 c = curl.parse(request, return_it=True)
                 pyperclip.copy(c)
 
@@ -211,12 +212,16 @@ class RequestContainer(Static):
                     resp = self.post_request(
                         url, body=body, headers={}
                     )  # , headers=headers)
-                    self.query_one("#response_text", Static).update(resp["response"])
-                    self.query_one("#status_code", Static).update(resp["status_code"])
+                    self.query_one("#response_text", Static).update(
+                        resp["response"])
+                    self.query_one("#status_code", Static).update(
+                        resp["status_code"])
             elif self.method_choice == "DELETE":
                 resp = self.delete_request(url=url)
-                self.query_one("#response_text", Static).update(resp["response"])
-                self.query_one("#status_code", Static).update(resp["status_code"])
+                self.query_one("#response_text", Static).update(
+                    resp["response"])
+                self.query_one("#status_code", Static).update(
+                    resp["status_code"])
             elif self.method_choice == "PUT":
                 body = self.query_one("#body_inp").value or {}
                 urlp = urlparse(url)
@@ -224,8 +229,10 @@ class RequestContainer(Static):
                 if body and url_valid:
                     body = json.loads(body)
                     resp = self.put_request(url=url, body=body, headers={})
-                    self.query_one("#response_text", Static).update(resp["response"])
-                    self.query_one("#status_code", Static).update(resp["status_code"])
+                    self.query_one("#response_text", Static).update(
+                        resp["response"])
+                    self.query_one("#status_code", Static).update(
+                        resp["status_code"])
             elif self.method_choice == "PATCH":
                 body = self.query_one("#body_inp").value or {}
                 urlp = urlparse(url)
@@ -233,12 +240,15 @@ class RequestContainer(Static):
                 if body and url_valid:
                     body = json.loads(body)
                 resp = self.patch_request(url=url, body=body, headers={})
-                self.query_one("#response_text", Static).update(resp["response"])
-                self.query_one("#status_code", Static).update(resp["status_code"])
+                self.query_one("#response_text", Static).update(
+                    resp["response"])
+                self.query_one("#status_code", Static).update(
+                    resp["status_code"])
             else:
                 url = self.query(Input).first().value
                 resp = self.get_request(url)
-                self.query_one("#response_text", Static).update(resp["response"])
+                self.query_one("#response_text", Static).update(
+                    resp["response"])
 
         elif button_id == "post":
             self.method_choice = "POST"
